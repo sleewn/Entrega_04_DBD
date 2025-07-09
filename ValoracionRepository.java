@@ -11,10 +11,10 @@ import java.util.Optional;
 
 @Repository
 public interface ValoracionRepository extends JpaRepository<Valoracion, Integer>{
-    //Método de consulta derivado
+  
     Optional<Valoracion> findById(Integer id);
 
-    //Método de consulta derivado con múltiples condiciones
+
     List<Valoracion> findByPuntaje(Integer puntaje);
     List<Valoracion> findByComentarioContainingIgnoreCase(String comentario);
 

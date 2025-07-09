@@ -32,7 +32,7 @@ public class Valoracion {
     private Producto idProducto;
 
     @OneToMany(mappedBy = "idValoracion")
-    //@JsonManagedReference
+    
     @JsonIgnore
     private Set<Usuario> usuarios = new LinkedHashSet<>();
 

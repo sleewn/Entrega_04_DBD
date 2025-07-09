@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface ProductoRepository extends  JpaRepository<Producto, Integer> {
-    //Método de consulta derivado
+
     Optional<Producto> findById(Integer idProducto);
 
     List<Producto> findByDescripcionContainingIgnoreCase(String descripcion);

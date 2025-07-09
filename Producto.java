@@ -22,7 +22,7 @@ public class Producto {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rut_usuario")
     @JsonBackReference("usuario-producto")
-    //@JsonIgnore
+    
     private Usuario rutUsuario;
 
     @Size(max = 1500)
