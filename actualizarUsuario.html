@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Actualizar Usuario</title>
+</head>
+<body>
+<h1>Actualizar Usuario</h1>
+<form id="actualizarUsuarioFormulario">
+  <label for="rutUsuario">RUT:</label><br/>
+  <input type="text" id="rutUsuario" name="rutUsuario" required readonly><br/>
+
+  <label for="nombreUsuario">Nombre:</label><br/>
+  <input type="text" id="nombreUsuario" name="nombreUsuario"><br/>
+
+  <label for="apellidoUsuario">Apellido:</label><br/>
+  <input type="text" id="apellidoUsuario" name="apellidoUsuario"><br/>
+
+  <label for="contrasenaUsuario">Password:</label><br/>
+  <input type="password" id="contrasenaUsuario" name="contrasenaUsuario"><br/>
+
+  <label for="regionUsuario">Region:</label><br/>
+  <input type="text" id="regionUsuario" name="regionUsuario"><br/>
+
+  <label for="comunaUsuario">Comuna:</label><br/>
+  <input type="text" id="comunaUsuario" name="comunaUsuario"><br/>
+
+  <label for="correoUsuario">Email:</label><br/>
+  <input type="text" id="correoUsuario" name="correoUsuario"><br/>
+
+  <label for="fechaNacimientoUsuario">FechaNacUsuario:</label><br/>
+  <input type="date" id="fechaNacimientoUsuario" name="fechaNacimientoUsuario"><br/>
+
+  <input type="submit" value="Actualizar Usuario">
+</form>
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const rutUsuario = urlParams.get('rut');
+
+  window.addEventListener('DOMContentLoaded', () => {
+    fetch(`http://localhost:8080/api/usuarios/${encodeURIComponent(rutUsuario)}`)
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('No se pudo cargar el usuario');
+              }
+              return response.json();
+            })
+            .then(usuario => {
+              document.getElementById('rutUsuario').value = usuario.rutUsuario;
+              document.getElementById('nombreUsuario').value = usuario.nombreUsuario || '';
+              document.getElementById('apellidoUsuario').value = usuario.apellidoUsuario || '';
+              document.getElementById('contrasenaUsuario').value = usuario.contrasenaUsuario || '';
+              document.getElementById('regionUsuario').value = usuario.regionUsuario || '';
+              document.getElementById('comunaUsuario').value = usuario.comunaUsuario || '';
+              document.getElementById('correoUsuario').value = usuario.correoUsuario || '';
+              document.getElementById('fechaNacimientoUsuario').value = usuario.fechaNacimientoUsuario || '';
+            })
+            .catch(error => {
+              alert('Error al obtener usuario: ' + error.message);
+            });
+  });
+
+  document.getElementById('actualizarUsuarioFormulario').addEventListener('submit', function(event){
+    event.preventDefault();
+
+    const data = {
+      rutUsuario: event.target.rutUsuario.value,
+      nombreUsuario: event.target.nombreUsuario.value,
+      apellidoUsuario: event.target.apellidoUsuario.value,
+      contrasenaUsuario: event.target.contrasenaUsuario.value,
+      comunaUsuario: event.target.comunaUsuario.value,
+      regionUsuario: event.target.regionUsuario.value,
+      correoUsuario: event.target.correoUsuario.value,
+      fechaNacimientoUsuario: event.target.fechaNacimientoUsuario.value
+    };
+
+    fetch(`http://localhost:8080/api/usuarios/${encodeURIComponent(rutUsuario)}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+    })
+            .then(response => {
+              if(response.ok){
+                alert('Usuario actualizado exitosamente');
+              } else {
+                response.json().then(err =>{
+                  alert('Error al actualizar usuario: ' + (err.message || JSON.stringify(err)));
+                });
+              }
+            })
+            .catch(error => {
+              alert('Error al actualizar usuario: ' + error);
+            });
+  });
+</script>
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const rutUsuario = urlParams.get('rut');
+  document.getElementById('actualizarUsuarioFormulario').addEventListener('submit', function(event){
+    event.preventDefault();
+    const data = {
+      rutUsuario: event.target.rutUsuario.value,
+      nombreUsuario: event.target.nombreUsuario.value,
+      apellidoUsuario: event.target.apellidoUsuario.value,
+      contrasenaUsuario: event.target.contrasenaUsuario.value,
+      comunaUsuario: event.target.comunaUsuario.value,
+      regionUsuario: event.target.regionUsuario.value,
+      correoUsuario: event.target.correoUsuario.value,
+      fechaNacimientoUsuario: event.target.fechaNacimientoUsuario.value.split('T')[0]
+    };
+    fetch('http://localhost:8080/api/usuarios', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+    })
+            .then(response => {
+              if(response.ok){
+                alert('Usuario actualizado exitosamente');
+                event.target.reset();
+              } else {
+                response.json().then(err =>{
+                  alert('Error al actualizar usuario: ' + (err.message || JSON.stringify(err)));
+                });
+              }
+            })
+            .catch(error => {
+              alert('Error al actualizar usuario: ' + error);
+            });
+  })
+</script>
+</body>
+</html>

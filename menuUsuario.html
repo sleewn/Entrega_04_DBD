@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Usuarios</title>
+</head>
+<body>
+    <h1>Usuarios</h1>
+    <table id="usuarios-table">
+        <thead>
+        <tr>
+            <th>Rut</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Región</th>
+            <th>Comuna</th>
+            <th>Correo</th>
+            <th>Fecha Nacimiento</th>
+            <th>ID Valoración</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <button onclick="window.location.href='crearUsuario.html'">Crear usuario</button>
+    <script>
+        const apiUrl = 'http://localhost:8080/api/usuarios';
+
+        async function cargarUsuarios() {
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+                const usuarios = await response.json();
+                const tbody = document.getElementById('usuarios-table').querySelector('tbody');
+
+                tbody.innerHTML = '';
+
+                usuarios.forEach(usuario => {
+                    const tr = document.createElement('tr');
+
+                    const rutTd = document.createElement('td');
+                    const enlace = document.createElement('a');
+                    enlace.href = `actualizarUsuario.html?rut=${encodeURIComponent(usuario.rutUsuario)}`;
+                    enlace.textContent = usuario.rutUsuario;
+                    rutTd.appendChild(enlace);
+                    tr.appendChild(rutTd);
+
+                    const nombreTd = document.createElement('td');
+                    nombreTd.textContent = usuario.nombreUsuario;
+                    tr.appendChild(nombreTd);
+
+                    const apellidoTd = document.createElement('td');
+                    apellidoTd.textContent = usuario.apellidoUsuario;
+                    tr.appendChild(apellidoTd);
+
+                    const regionTd = document.createElement('td');
+                    regionTd.textContent = usuario.regionUsuario;
+                    tr.appendChild(regionTd);
+
+                    const comunaTd = document.createElement('td');
+                    comunaTd.textContent = usuario.comunaUsuario;
+                    tr.appendChild(comunaTd);
+
+                    const correoTd = document.createElement('td');
+                    correoTd.textContent = usuario.correoUsuario;
+                    tr.appendChild(correoTd);
+
+                    const fechaTd = document.createElement('td');
+                    fechaTd.textContent = usuario.fechaNacimientoUsuario;
+                    tr.appendChild(fechaTd);
+
+                    const valoracionTd = document.createElement('td');
+                    valoracionTd.textContent = usuario.idValoracion ? usuario.idValoracion.id : '';
+                    tr.appendChild(valoracionTd);
+
+                    tbody.appendChild(tr);
+                });
+
+            } catch (error) {
+                console.error('Error al cargar usuarios:', error);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', cargarUsuarios);
+    </script>
+</body>
+</html>
